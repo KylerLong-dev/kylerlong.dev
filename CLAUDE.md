@@ -7,14 +7,19 @@ Personal site + journal for Kyler Long (software developer & home-health physica
 
 ## Stack (do not deviate without asking)
 - Next.js (App Router) + TypeScript (strict)
-- Tailwind CSS — theming via CSS-variable tokens that flip on `[data-theme="dark|light"]` (see `app/globals.css`). Prefer token classes (`bg-surface`, `text-muted`) over `dark:` variants.
+- Tailwind CSS **v4** — CSS-first config (`@import "tailwindcss"` in `app/globals.css`, no `tailwind.config.js`). Theming via CSS-variable tokens that flip on `[data-theme="dark|light"]`. Prefer token classes (`bg-surface`, `text-muted`) over `dark:` variants. If a `dark:` variant is ever needed, retarget it with `@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *))` — there is no v3 `darkMode` config key in v4.
 - `next-themes` for theme (attribute = `data-theme`, with no-flash inline script)
-- MDX for blog posts (`remark-gfm`, `rehype-slug`, `rehype-autolink-headings`, `rehype-pretty-code`/Shiki)
+- MDX for blog posts via **`next-mdx-remote/rsc` + `gray-matter`** (frontmatter + journal index). NOT `@next/mdx` — Turbopack is the default bundler in Next 16 and can't take function plugin options; next-mdx-remote compiles in Node so plugins pass as real functions. Plugins: `remark-gfm`, `rehype-slug`, `rehype-autolink-headings`, `rehype-pretty-code`/Shiki.
 - Fonts: `geist` (sans + mono) via the geist package; `Newsreader` via `next/font/google`
 - Deploy: Vercel
 
+## Workflow
+Build in phases per `BUILD_PLAN.md` (also SPEC.md §9): scaffold → shell → static pages → journal+MDX → home → atmosphere → polish/ship. One phase at a time; verify each against `/design-reference/` and stop for review before the next. Check the box + log decisions only after I confirm on the Vercel preview.
+
 ## The design is the source of truth
 `/design-reference/` holds HTML/JSX/CSS prototypes. They are **high-fidelity references**, not code to copy. Recreate them faithfully in our stack. When a value is ambiguous, OPEN THE PROTOTYPE and read the exact CSS in `styles.css` — don't guess. Full architecture & build plan: `/design-reference/SPEC.md`.
+
+**Tailwind v3 → v4 translation:** the prototypes may use Tailwind **v3** conventions — always translate to **v4**. Match the *visual result*, not the literal class. Common gotchas: config → `@theme` in CSS (no `tailwind.config.js`); `darkMode` key → `@custom-variant`; renamed utilities (`shadow-sm`→`shadow-xs`, `shadow`→`shadow-sm`, `rounded`→`rounded-sm`, `rounded-sm`→`rounded-xs`, `outline-none`→`outline-hidden`, `flex-shrink/grow`→`shrink/grow`); opacity utilities (`bg-opacity-50`)→slash syntax (`bg-black/50`); `ring` default 3px→1px (use `ring-3` to keep 3px); default border/divide color is now `currentColor`.
 
 ## Conventions
 - Server Components by default. Mark interactive/canvas pieces `'use client'`: Nav, theme toggle, atmosphere (InteractiveField/MarginFireflies/SunRays/Clouds/Stars), progress bar, TOC scroll-spy, newsletter form.
@@ -43,6 +48,3 @@ Type: Geist (sans, body 17/1.7, features ss01/cv11), Geist Mono (labels/code), N
 
 ## Placeholders to fill (ask Kyler)
 RSS feed, X handle (currently `#`), confirm email `kyler@kylerlong.dev`, real project/case-study/live URLs, About portrait photo + Orlando map.
-
-## Workflow
-Build in phases (SPEC.md §9): scaffold → shell → static pages → journal+MDX → home → atmosphere → polish/ship. Verify each phase against `/design-reference/` before moving on.
