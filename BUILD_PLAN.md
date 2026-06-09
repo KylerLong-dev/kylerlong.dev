@@ -8,7 +8,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 
 ---
 
-## [ ] Phase 0 — Scaffold & foundations
+## [x] Phase 0 — Scaffold & foundations
 
 **Goal:** A blank, themeable, correctly-tokened app that flips dark/light with no flash. No real UI yet — just the bedrock every later phase stands on.
 
@@ -26,9 +26,9 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 > Phase 0 only — scaffold & foundations, no real UI. Install the deps we agreed on (next-themes, geist, and the next-mdx-remote MDX set incl. shiki). In `app/globals.css` define the design tokens from SPEC §3 as CSS variables under `:root` (dark) and `[data-theme="light"]`, expose them via Tailwind v4 `@theme`, and add the `@custom-variant dark` pointed at `[data-theme="dark"]` with `:where()` for 0 specificity. Wire Geist (sans+mono) via the geist package and Newsreader via next/font/google. Set up next-themes ThemeProvider with `attribute="data-theme"`, defaultTheme dark, suppressHydrationWarning, and an inline no-flash script. Clean the create-next-app boilerplate (layout metadata, demo SVGs, unused font wiring). Add a temporary theme-toggle button. Use your Tailwind v4 token approach over any v3 config snippets in SPEC.md. Stop when I can reload and confirm tokens flip with no flash.
 
 **Done when**
-- [ ] Dark/light toggle flips all tokens; **no FOUC on hard reload**.
-- [ ] Geist + Newsreader render; no console/build errors (`npm run build` green).
-- [ ] No leftover create-next-app demo markup/assets.
+- [x] Dark/light toggle flips all tokens; **no FOUC on hard reload**.
+- [x] Geist + Newsreader render; no console/build errors (`npm run build` green).
+- [x] No leftover create-next-app demo markup/assets.
 
 ---
 
@@ -180,4 +180,10 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - Tailwind **v4** confirmed → token approach via `@theme` + `@custom-variant` (not v3 `darkMode` config).
 - MDX → **Option B** (`next-mdx-remote/rsc` + `gray-matter`) to avoid Turbopack's string-only plugin limit and to build the index from frontmatter.
 - `shiki` installed explicitly (peer of `rehype-pretty-code`).
+- **Phase 0 done (2026-06-09).** Color tokens mapped via `@theme inline` so utilities emit live `var(--…)` and re-resolve on the `[data-theme]` flip (plain `@theme` would freeze the dark value); fonts via plain `@theme` so the real `--font-*` vars stay referenceable in base CSS.
+- No-flash: rely on **next-themes' built-in pre-paint script** (no hand-rolled inline script); `suppressHydrationWarning` on `<html>`.
+- Omitted `disableTransitionOnChange` on purpose — keeps the body's 0.2s background/color transition on theme switch.
+- MDX deps installed in Phase 0 but **not wired until Phase 3**.
+- Temporary `app/page.tsx` + `app/theme-toggle-temp.tsx` smoke test — **delete both when the Phase 1 Nav toggle lands.**
+- npm-audit: 3 moderate vulns are a transitive `postcss` inside Next's own bundle; only fix bumps Next to a preview/canary (breaking) → left as-is.
 - (add entries here as you go)

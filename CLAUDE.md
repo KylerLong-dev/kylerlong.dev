@@ -16,6 +16,14 @@ Personal site + journal for Kyler Long (software developer & home-health physica
 ## Workflow
 Build in phases per `BUILD_PLAN.md` (also SPEC.md §9): scaffold → shell → static pages → journal+MDX → home → atmosphere → polish/ship. One phase at a time; verify each against `/design-reference/` and stop for review before the next. Check the box + log decisions only after I confirm on the Vercel preview.
 
+**How we work each task (no exceptions):**
+1. **Research** — read the relevant code, `/design-reference/` prototypes (exact CSS in
+   `styles.css` when ambiguous), `SPEC.md`, `BUILD_PLAN.md`, and docs before forming a view.
+2. **Plan** — break the work into small, sequential, reviewable steps and lay them out.
+3. **Approve before building** — present the plan and wait; no code until Kyler approves.
+4. **Approve each change** — stop after each segment for review (+ Vercel-preview
+   confirmation) before moving to the next.
+
 ## The design is the source of truth
 `/design-reference/` holds HTML/JSX/CSS prototypes. They are **high-fidelity references**, not code to copy. Recreate them faithfully in our stack. When a value is ambiguous, OPEN THE PROTOTYPE and read the exact CSS in `styles.css` — don't guess. Full architecture & build plan: `/design-reference/SPEC.md`.
 
