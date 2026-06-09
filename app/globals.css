@@ -251,8 +251,14 @@
 
 /* mobile nav: slide-down menu with staggered links */
 @media (max-width: 640px) {
-  .nav-inner { padding: 14px 20px; }
+  .nav-inner { padding: 10px 20px; }
   .nav-burger { display: inline-flex; }
+  /* Larger tap targets on mobile — ≥44px for thumb reach (SPEC Phase 6 goal) */
+  .theme-toggle,
+  .nav-burger { width: 44px; height: 44px; }
+  .theme-icon,
+  .theme-icon svg { width: 16px; height: 16px; }
+  .nav-logo { font-size: 15px; padding: 6px 0; }
   .nav-links {
     position: absolute;
     top: 100%;
