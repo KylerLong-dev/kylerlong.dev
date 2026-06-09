@@ -60,7 +60,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 
 ---
 
-## [ ] Phase 2 — Static pages (/work, /about, /contact)
+## [x] Phase 2 — Static pages (/work, /about, /contact)
 
 **Goal:** The three content-light pages, pixel-matched, plus the shared **project link + status systems** they (and Home) rely on.
 
@@ -78,8 +78,8 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 > Phase 2 only — /work, /about, /contact. First implement the shared status system (building=sky pulsing, paused=amber, evergreen=green) and the link-affordance system from SPEC §7 (only link text is clickable; "Case study" internal / "Visit" external chips with the diagonal→flat arrow; 0 links shows "In development"). Then build the three pages to pixel-match design-reference/Work.html, About.html, Contact.html (open them + styles.css for exact values). About = bento layout A with image placeholders. Contact = colophon ledger + newsletter card. No fireflies/sun/clouds yet. Stop for side-by-side review against the prototypes.
 
 **Done when**
-- [ ] Status + link systems match spec (multi-link = separate text targets).
-- [ ] All three pages match prototypes in both themes; responsive down to mobile.
+- [x] Status + link systems match spec (multi-link = separate text targets).
+- [x] All three pages match prototypes in both themes; responsive down to mobile.
 
 ---
 
@@ -191,4 +191,8 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - **Hydration gotcha:** theme-dependent classNames on SSR'd elements need a client-only guard — next-themes reads `localStorage` synchronously so `resolvedTheme` differs from the server on first render. Used a `useSyncExternalStore`-based `useIsClient`, NOT `useEffect`+`setState` (`react-hooks/set-state-in-effect` is **error-level** in eslint-config-next@16).
 - Added stub routes `/journal /work /about /contact` (real header text) so nav/active/theme-persistence are reviewable; fleshed out in Phases 2–4. Deleted the temp Phase-0 toggle + smoke-test page.
 - Home **hero eyebrow dot pulse** (`.hero-eyebrow .dot` + `pulse 2s`) deferred to Phase 4 — today's home eyebrow uses the static-glow `.j-eyebrow` placeholder.
+- **Phase 2 done (2026-06-09).** Shared systems in `app/lib/projects.ts` (types + data + `linkMeta`/`projectLinks`), `app/components/status.tsx`, `app/components/cta-link.tsx` — reused by Home in Phase 4. Pages are Server Components; CSS ported verbatim into a Phase-2 block in `globals.css`.
+- Included a **4th project status `planned`** (purple `#A78BFA`) for the verosnapshots filler — beyond the original 3-status shape; `ProjectStatus` type updated.
+- **Deviations from prototype (Kyler's calls):** the contact ledger `.ledger-head .dot` now **pulses** (`bentoPulse`, gated under reduced-motion) like the work/about dots; the content indicator dots are **unified to 8px** (work status 8 unchanged, about pin 7→8, ledger 9→8). Header eyebrow dots (6px) + map marker (12px) left distinct.
+- Lint: literal `// elsewhere` JSX text must be `{"// elsewhere"}` (`react/jsx-no-comment-textnodes`).
 - (add entries here as you go)
