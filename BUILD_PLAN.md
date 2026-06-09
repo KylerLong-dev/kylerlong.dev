@@ -32,7 +32,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 
 ---
 
-## [ ] Phase 1 — Shared shell
+## [x] Phase 1 — Shared shell
 
 **Goal:** The chrome every page wears — nav, footer, header band, separators, newsletter card — as reusable components, with their signature animations.
 
@@ -54,9 +54,9 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 > Phase 1 only — the shared shell. Build `<Nav>` (logo, links with active=accent, animated hamburger→X, slide-down mobile menu with staggered links, animated sun⇄moon theme toggle), `<Footer>` (reeds separator via design-reference/reeds-mask.png, footer links), the page header band + `<CurveDivider>`, and `<NewsletterCard>`. Match design-reference/components.jsx and styles.css exactly (open them for precise values). Mark interactive pieces `'use client'`; gate all motion on prefers-reduced-motion. Wire them into the root layout. Stop so I can review the nav animations, mobile menu, and theme persistence across routes.
 
 **Done when**
-- [ ] Hamburger morphs to X; mobile menu slides + staggers; theme toggle animates.
-- [ ] Footer reeds render correctly in both themes; links point to the right places.
-- [ ] Reduced-motion disables the decorative transitions.
+- [x] Hamburger morphs to X; mobile menu slides + staggers; theme toggle animates.
+- [x] Footer reeds render correctly in both themes; links point to the right places.
+- [x] Reduced-motion disables the decorative transitions.
 
 ---
 
@@ -186,4 +186,9 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - MDX deps installed in Phase 0 but **not wired until Phase 3**.
 - Temporary `app/page.tsx` + `app/theme-toggle-temp.tsx` smoke test — **delete both when the Phase 1 Nav toggle lands.**
 - npm-audit: 3 moderate vulns are a transitive `postcss` inside Next's own bundle; only fix bumps Next to a preview/canary (breaking) → left as-is.
+- **Phase 1 done (2026-06-09).** Chrome CSS ported **verbatim** from `styles.css` into a sectioned block in `app/globals.css` (plain CSS, not utilities) so the burger/menu-stagger/icon-crossfade timings stay exact. Components live in `app/components/`.
+- Light sky/band tone fixed to **"deepblue"** (`--light-band-top:#DBEAFE`, `--light-band-bot:#93C5FD`) + `--curve-line` per theme. The light-mode footer band + reeds use `--light-band-top` (the `[data-theme="light"]` overrides were initially missed → footer looked too light; fixed).
+- **Hydration gotcha:** theme-dependent classNames on SSR'd elements need a client-only guard — next-themes reads `localStorage` synchronously so `resolvedTheme` differs from the server on first render. Used a `useSyncExternalStore`-based `useIsClient`, NOT `useEffect`+`setState` (`react-hooks/set-state-in-effect` is **error-level** in eslint-config-next@16).
+- Added stub routes `/journal /work /about /contact` (real header text) so nav/active/theme-persistence are reviewable; fleshed out in Phases 2–4. Deleted the temp Phase-0 toggle + smoke-test page.
+- Home **hero eyebrow dot pulse** (`.hero-eyebrow .dot` + `pulse 2s`) deferred to Phase 4 — today's home eyebrow uses the static-glow `.j-eyebrow` placeholder.
 - (add entries here as you go)

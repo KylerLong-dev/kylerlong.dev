@@ -1,58 +1,22 @@
-import { ThemeToggleTemp } from "./theme-toggle-temp";
+import { PageHeader } from "./components/page-header";
+import { NewsletterCard } from "./components/newsletter-card";
 
-// TEMPORARY — Phase 0 smoke test. Proves tokens flip and fonts render.
-// Replaced by the real home page in Phase 4.
+// Phase 1 placeholder. The real hero band, now-strip, and selected work are
+// built in Phase 4 — for now this exercises the shared shell.
 export default function Home() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-10 px-6 py-16">
-      <header className="space-y-3">
-        <p className="font-mono text-xs uppercase tracking-[0.14em] text-faint">
-          phase 0 · scaffold
-        </p>
-        <h1 className="text-3xl font-semibold text-fg">
-          kylerlong<span className="text-accent">.</span>dev
-        </h1>
-        <p className="text-muted">
-          Token + theme smoke test. Toggle the theme and confirm every swatch
-          and text tone flips with no flash on reload.
-        </p>
-        <p className="font-serif text-lg italic text-muted">
-          Newsreader serif sample — used sparingly for editorial flourishes.
-        </p>
-      </header>
-
-      <section className="space-y-4 rounded-xl border border-border bg-surface p-6">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <Swatch className="bg-bg" label="bg" />
-          <Swatch className="bg-surface" label="surface" />
-          <Swatch className="bg-surface-2" label="surface-2" />
-          <Swatch className="bg-accent" label="accent" />
-          <Swatch className="bg-accent-soft" label="accent-soft" />
-          <Swatch className="bg-border" label="border" />
-        </div>
-
-        <div className="space-y-1 border-t border-border pt-4">
-          <p className="text-fg">text-fg — primary body text (Geist)</p>
-          <p className="text-muted">text-muted — secondary text</p>
-          <p className="text-faint">text-faint — faint / labels</p>
-          <p className="font-mono text-sm text-accent">
-            font-mono — Geist Mono, accent
-          </p>
-        </div>
-      </section>
-
-      <ThemeToggleTemp />
-    </main>
-  );
-}
-
-function Swatch({ className, label }: { className: string; label: string }) {
-  return (
-    <div className="space-y-1.5">
-      <div
-        className={`h-12 w-full rounded-md border border-border ${className}`}
+    <>
+      <PageHeader
+        eyebrow="Orlando · developer · physical therapist"
+        title="kylerlong.dev"
+        sub="Phase 1 shows the shared shell — nav, header band, footer with reeds, and the newsletter card. The real home page lands in Phase 4."
       />
-      <p className="font-mono text-xs text-faint">{label}</p>
-    </div>
+      <main
+        className="journal-shell"
+        style={{ paddingTop: 56, paddingBottom: 64 }}
+      >
+        <NewsletterCard />
+      </main>
+    </>
   );
 }

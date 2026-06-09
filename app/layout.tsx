@@ -3,6 +3,8 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Newsreader } from "next/font/google";
 import { Providers } from "./providers";
+import { Nav } from "./components/nav";
+import { SiteFooter } from "./components/site-footer";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -33,7 +35,11 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable} ${newsreader.variable}`}
     >
       <body className="flex min-h-screen flex-col">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Nav />
+          <div className="flex flex-1 flex-col">{children}</div>
+          <SiteFooter />
+        </Providers>
       </body>
     </html>
   );
