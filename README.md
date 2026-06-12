@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# kylerlong.dev
 
-## Getting Started
+Personal site + journal for Kyler Long — software developer & home-health
+physical therapist, Orlando FL.
 
-First, run the development server:
+**Stack:** Next.js (App Router) · TypeScript · Tailwind CSS v4 (CSS-first
+tokens, `data-theme` dark/light) · MDX via `next-mdx-remote/rsc` +
+`gray-matter` · Geist + Newsreader · Vercel.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev     # local dev (http://localhost:3000)
+npm run build   # production build
+npm run lint    # eslint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Dev server showing stale styles or weird errors? Stop it, `rm -rf .next`,
+> and restart — Turbopack's persistent dev cache occasionally goes stale.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Writing journal posts
 
-## Learn More
+All posts live in **`content/journal/`** — one `.mdx` file per post. To
+create a post, add a file there (filename should match the slug, e.g.
+`my-new-post.mdx`); to edit, edit the file. There is no registry to update —
+the index, topic filters, and post pages all derive from this folder at
+build time.
 
-To learn more about Next.js, take a look at the following resources:
+### Frontmatter (required)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```yaml
+---
+title: "My new post"
+slug: "my-new-post"
+date: "2026-07-01"
+excerpt: "One or two sentences — shows on the journal index and as the post header description."
+tags: ["next.js", "whatever"]
+category: "next.js"
+---
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Keep the `date` quoted (`"YYYY-MM-DD"`).
 
-## Deploy on Vercel
+### What happens automatically
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Index listing + sorting** — newest date first.
+- **Topic filter chips** — derived from each post's `category`; a new
+  category value creates a new chip on its own.
+- **Read time** — computed from word count (~200 wpm).
+- **Table of contents** — built from `##` and `###` headings; scroll-spy
+  and anchor links just work.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### What's manual
+
+- **"Popular reads" rail** — a curated list, not automatic. Edit the
+  `POPULAR_SLUGS` array at the top of `app/lib/posts.ts` to feature
+  different posts.
+
+### Post body
+
+Plain Markdown (GFM), plus these components — see
+`content/journal/why-i-rewrote-my-markdown-pipeline-again.mdx` for a post
+that demonstrates everything:
+
+| Component | Use |
+|---|---|
+| `<Callout type="note\|warn\|tip" title="...">` | Tinted aside box |
+| `<Figure caption="...">` | Framed 16:9 figure with caption |
+| `<Tweet name="..." handle="..." date="...">` | Static tweet embed |
+| `<FN n={1} />` | Footnote reference, pairs with the footnotes section |
+
+Code fences take a filename title and line highlights:
+
+````
+```tsx title="app/page.tsx" {2-3}
+```
+````
+
+Footnotes are a manual `<section className="footnotes">` at the end of the
+post with `id="fn-N"` items and `#fn-ref-N` backrefs — copy the pattern from
+the sample post.
+
+### Gotchas
+
+- **Never write literal `<p>` tags inside JSX blocks in `.mdx`.** MDX wraps
+  loose text in paragraphs itself, so a hand-written `<p>` nests
+  (`<p><p>`) and causes a React hydration error. Just write the text.
+- The five "Placeholder entry" stub posts are seed data for the build-out —
+  replace or delete them before launch.
+
+---
+
+## Project docs
+
+- `CLAUDE.md` — persistent context + conventions (stack rules, tokens,
+  data shapes).
+- `BUILD_PLAN.md` — phase tracker + decisions log.
+- `design-reference/` — high-fidelity HTML/JSX/CSS prototypes (the design
+  source of truth; reference only, not shipped code).
+- `design-reference/SPEC.md` — architecture spec.
