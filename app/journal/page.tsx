@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import { PageHeader } from "../components/page-header";
+import { NewsletterCard } from "../components/newsletter-card";
+import { JournalIndex } from "../components/journal-index";
+import {
+  getAllPosts,
+  getCategories,
+  getPopularPosts,
+  toPostMeta,
+} from "../lib/posts";
 
 export const metadata: Metadata = { title: "Journal" };
 
-// Phase 1 stub — full journal index (MDX list + rail) arrives in Phase 3.
 export default function JournalPage() {
+  const posts = getAllPosts();
+
   return (
     <>
       <PageHeader
@@ -12,12 +21,19 @@ export default function JournalPage() {
         title="Writing on software, craft, and the long way around"
         sub="Field notes from building things — the successes, the failures, and the experiences gained along the way. New entries land here first."
       />
-      <main
-        className="journal-shell"
-        style={{ paddingTop: 56, paddingBottom: 64 }}
-      >
-        <p className="text-muted">Phase 1 shell stub — full page in Phase 3.</p>
-      </main>
+      <JournalIndex
+        posts={posts.map(toPostMeta)}
+        popular={getPopularPosts(posts).map(toPostMeta)}
+        categories={getCategories(posts)}
+      />
+      <section className="page-cta">
+        <div className="journal-shell journal-grid journal-cta-grid">
+          <div className="j-list">
+            <NewsletterCard />
+          </div>
+          <div className="j-rail-col" aria-hidden="true"></div>
+        </div>
+      </section>
     </>
   );
 }

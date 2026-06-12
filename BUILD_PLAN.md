@@ -83,7 +83,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 
 ---
 
-## [ ] Phase 3 — Journal + MDX
+## [x] Phase 3 — Journal + MDX
 
 **Goal:** The content engine — MDX pipeline, the journal index, and the full article template.
 
@@ -101,9 +101,9 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 > Phase 3 only — Journal + MDX. Set up next-mdx-remote/rsc + gray-matter with remark-gfm, rehype-slug, rehype-autolink-headings, and rehype-pretty-code (Shiki theme matching our palette). Posts live in content/journal/*.mdx with frontmatter {title, slug, date, excerpt, tags, category}. Build /journal (list + sticky filter/popular rail + newsletter) and /journal/[slug] (fixed scroll progress bar, tinted header band, 1180px shell with 680px article column + sticky TOC from headings with active-section highlight and reading %). Map MDX elements (code, callouts, figures, footnotes) to styled components per design-reference/post-content.jsx. Migrate the sample post from design-reference/Blog Post.html into an .mdx file. Stop — I'll verify TOC scroll-spy, code highlighting, and footnote links.
 
 **Done when**
-- [ ] A `.mdx` post renders with highlighted code, callouts, figures, working footnotes.
-- [ ] TOC tracks the active section + reading %; progress bar tracks scroll.
-- [ ] `/journal` index lists posts from frontmatter; filters work.
+- [x] A `.mdx` post renders with highlighted code, callouts, figures, working footnotes.
+- [x] TOC tracks the active section + reading %; progress bar tracks scroll.
+- [x] `/journal` index lists posts from frontmatter; filters work.
 
 ---
 
@@ -195,4 +195,11 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - Included a **4th project status `planned`** (purple `#A78BFA`) for the verosnapshots filler — beyond the original 3-status shape; `ProjectStatus` type updated.
 - **Deviations from prototype (Kyler's calls):** the contact ledger `.ledger-head .dot` now **pulses** (`bentoPulse`, gated under reduced-motion) like the work/about dots; the content indicator dots are **unified to 8px** (work status 8 unchanged, about pin 7→8, ledger 9→8). Header eyebrow dots (6px) + map marker (12px) left distinct.
 - Lint: literal `// elsewhere` JSX text must be `{"// elsewhere"}` (`react/jsx-no-comment-textnodes`).
+- **Phase 3 done (2026-06-11).** Content in `content/journal/*.mdx` — 1 migrated sample post + **5 placeholder stubs** (Kyler's call, so filters/popular rail are reviewable). Data layer `app/lib/posts.ts`: gray-matter index, ~200wpm computed read time (sample shows 5 min vs prototype's hardcoded 8), `extractHeadings` slugs via `github-slugger` for exact id parity with `rehype-slug`.
+- Code highlighting: **custom Shiki dual-theme pair** (`app/lib/shiki-themes.ts`) built from the prototype `.tok-*` palette; rehype-pretty-code wants `ThemeRegistrationRaw` (not `ThemeRegistration` — `settings` must be required). Tokens emit `--shiki-dark/--shiki-light` vars flipped on `[data-theme]` in CSS — no re-highlight on theme switch. Line-number gutter rebuilt with CSS counters on `[data-line]::before` (`line-height: 22.95px` keeps the divider rule continuous); prototype's separate gutter column doesn't survive rehype markup.
+- **Deviations from prototype (Kyler's calls):** post topbar eyebrow shows the **category** (frontmatter has no series field; no "part x of y"); footnote refs/items got `scroll-margin-top` so smooth-scroll clears the sticky nav.
+- **MDX gotcha (caused a hydration error):** loose text inside JSX blocks gets wrapped in `<p>` by MDX — never write literal `<p>` inside `<blockquote>`/components in `.mdx` (yields `<p><p>`). Footnote `<li>` text also p-wraps → scoped `.footnotes li p` CSS keeps it 14px.
+- Scroll state (progress bar + TOC %/active) via shared `useSyncExternalStore` hook (`use-scroll-progress.ts`) — same eslint constraint as Phase 1.
+- Added `design-reference/**` to eslint `globalIgnores` — prototypes were flooding `npm run lint` with 154 pre-existing errors; app code lints clean.
+- **Local-dev gotcha:** Turbopack's persistent dev cache served stale `globals.css` (missing the whole Phase 3 block) even after recompile — devtools badge showed "(stale)". Fix: stop dev, `rm -rf .next`, restart. Prod builds unaffected.
 - (add entries here as you go)

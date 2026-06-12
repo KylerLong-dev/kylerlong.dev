@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Design prototypes are high-fidelity references, not shipped code.
+    "design-reference/**",
   ]),
 ]);
 

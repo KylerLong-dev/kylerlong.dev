@@ -1,0 +1,152 @@
+---
+title: "Why I rewrote my markdown pipeline (again)"
+slug: "why-i-rewrote-my-markdown-pipeline-again"
+date: "2026-05-19"
+excerpt: "Notes from a weekend spent pulling shiki out of the runtime, folding MDX compilation into the build, and learning — again — that the best optimization is the one you stop doing. Here is everything that broke and everything I would keep."
+tags: ["mdx", "shiki", "next.js", "app-router"]
+category: "next.js"
+---
+
+I've rewritten my markdown pipeline three times in the last eighteen months,
+and each time I told myself it would be the last. This week I did it again
+— and this time, with some confidence that the choice will hold.
+These are the notes I took along the way, mostly so I can find them again
+the next time the temptation strikes.<FN n={1} />
+
+For context: this site is a Next.js App Router project. Posts are MDX files
+living next to the route segments that render them. Nothing exotic — but the
+intersection of [React Server Components](#), dynamic imports,
+and syntax highlighting is a swamp, and I keep stepping into it.
+
+## The old setup
+
+Until last weekend I was using [`next-mdx-remote`](#) with a small `rehype`
+chain. It worked, mostly. But every time I added a new MDX component I had to
+thread it through three different boundaries, and the highlighter was bundling
+a 600KB chunk into every client component that happened to live near a post.
+
+```tsx title="app/journal/[slug]/page.tsx" {2-3}
+// the old, painful version
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { bundleMDX } from 'mdx-bundler';
+import * as runtime from 'react/jsx-runtime';
+
+export async function Page({ params }: { params: { slug: string } }) {
+  const source = await readPost(params.slug);
+  const { code } = await bundleMDX({ source });
+  return <MDXRemote source={source} components={mdx} />;
+}
+```
+
+<Callout type="note" title="On the highlighter">
+  The 600KB chunk came from `shiki` being imported eagerly. The fix is
+  well-known — lazy it on the server — but I hadn't done it because I'd
+  convinced myself it didn't matter. It did.
+</Callout>
+
+## What I changed
+
+The new pipeline does three things differently. First, MDX is compiled at
+build time via a small script, not at request time. Second, the highlighter
+runs once during that build, produces tokenized HTML, and the runtime never
+loads shiki at all. Third — and this is the change I'm most pleased about —
+every MDX component is a regular React component imported from one file.
+No registry, no map, no boundary gymnastics.
+
+```ts title="scripts/build-posts.ts"
+import { compile } from '@mdx-js/mdx';
+import { getHighlighter } from 'shiki';
+import { rehypeShiki } from './rehype-shiki';
+
+const highlighter = await getHighlighter({
+  themes: ['github-dark', 'github-light'],
+  langs: ['ts', 'tsx', 'bash'],
+});
+
+export async function buildPost(slug: string) {
+  const raw = await readFile(postPath(slug));
+  return compile(raw, { rehypePlugins: [rehypeShiki(highlighter)] });
+}
+```
+
+The build runs in about 800ms for 40 posts on my laptop. That's fast enough
+that I run it on every save in dev, gated behind a watcher. The cost of
+being wrong is the next 30 minutes of my life, and 800ms is well inside the
+margin where I won't notice.
+
+{/* No literal <p> inside JSX here — MDX wraps loose text in paragraphs
+    itself, and a hand-written <p> would nest (hydration error). */}
+<blockquote>
+  The best build-time work is the work you can stop doing at runtime
+  without anyone noticing.
+
+  <cite>something I told myself, in a notebook, in October</cite>
+</blockquote>
+
+## A hiccup with shiki
+
+The first attempt blew up because `shiki` v1.0 changed the import shape —
+what used to be a default export is now a named one, and the WASM grammar
+loader needs a base URL when run outside the browser. I lost an embarrassing
+amount of time to this before noticing the migration guide.
+
+<Callout type="warn" title="Heads up if you're upgrading">
+  `getHighlighter` is deprecated in favor of `createHighlighter`. The old
+  name still works but logs a warning into your build output, which Vercel
+  turns red, which makes you think the deploy failed. Just rename it.
+</Callout>
+
+<Figure caption="Build output, after — one slow line is the highlighter warming up.">
+  <BuildOutput />
+</Figure>
+
+### Caching the highlighter
+
+Booting a fresh highlighter per post is wasteful. The fix is a module-level
+singleton — but be careful: in Next.js dev mode, the build module is
+re-evaluated more often than you'd expect, and a true singleton needs to be
+hung off `globalThis` if you want it to survive HMR.
+
+<Tweet name="Lee Robinson" handle="leeerob" date="May 14, 2026">
+  A reminder: in the App Router, “runs once” depends on which module graph
+  you're in. Server components, route handlers, and edge functions all
+  have different lifetimes. If you cache something, pick where it lives
+  on purpose.
+</Tweet>
+
+## What's left to do
+
+Three things I haven't fixed yet and want to come back to:
+
+- Footnote backlinks render but don't smooth-scroll on Safari <FN n={2} /> —
+  I think this is a `scroll-padding-top` issue but I haven't proved it.
+- Inline `<Tweet>` embeds are static placeholders. I want them to be real,
+  but not at the cost of loading the Twitter widget on every page.
+- The RSS feed still uses the old pipeline. Migrating that means choosing
+  between rendering MDX twice or shipping HTML I don't fully control.
+  Both options have something wrong with them.
+
+## Signing off
+
+I'm writing this in the same editor I built the pipeline in, which feels
+right — the whole project, including this post, gets a little simpler
+every time I touch it. That's the goal. If the next rewrite is the last
+one, it'll be because there's nothing left to take away.
+
+— Kyler
+
+<section className="footnotes">
+  <h3>Footnotes</h3>
+  <ol>
+    <li id="fn-1">
+      The previous two attempts are written up <a href="#">here</a> and{" "}
+      <a href="#">here</a>, if you're curious about the dead ends.{" "}
+      <a href="#fn-ref-1" className="footnote-backref">↩</a>
+    </li>
+    <li id="fn-2">
+      Reproducible on Safari 17.4 but not on Technology Preview, so it may
+      already be fixed upstream.{" "}
+      <a href="#fn-ref-2" className="footnote-backref">↩</a>
+    </li>
+  </ol>
+</section>
