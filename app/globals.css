@@ -2429,15 +2429,11 @@
 }
 [data-theme="dark"] .sun-rays { display: none; }
 
-/* ---- Decorative sky no-ops: nothing renders under reduced-motion or on
-   touch / coarse pointers (Phase 5 done-criterion). ---- */
+/* Stars / shooting star / clouds stay on at every screen size (Kyler's call) —
+   no touch/coarse hide. The sun still scales down + hides on small screens via
+   its width rules above. Reduced-motion stays the one thing that drops them
+   all, per our motion convention. */
 @media (prefers-reduced-motion: reduce) {
-  .stars,
-  .shooting-star,
-  .clouds,
-  .sun-rays { display: none; }
-}
-@media (pointer: coarse) {
   .stars,
   .shooting-star,
   .clouds,

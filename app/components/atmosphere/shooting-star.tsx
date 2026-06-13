@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 
 // Periodic streak across the dark sky. State starts null (renders nothing on
 // SSR + first paint → no hydration mismatch); the streak is scheduled after
-// mount. No-ops under reduced-motion / coarse pointers (CSS also hides it).
+// mount. Shows at every screen size (incl. touch); only reduced-motion stops it.
 type Shot = {
   startX: number;
   startY: number;
@@ -18,9 +18,9 @@ export function ShootingStar() {
   const [shot, setShot] = useState<Shot | null>(null);
 
   useEffect(() => {
+    // Stays on at every screen size (incl. touch); only reduced-motion stops it.
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    if (reduce || coarse) return;
+    if (reduce) return;
 
     let timer: ReturnType<typeof setTimeout>;
     const fire = () => {
