@@ -107,7 +107,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 
 ---
 
-## [ ] Phase 4 — Home
+## [x] Phase 4 — Home
 
 **Goal:** Compose the landing page from pieces built in Phases 1–3.
 
@@ -125,8 +125,8 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 > Phase 4 only — Home. Build `/` to match design-reference/Home.html + home-app.jsx: hero band (eyebrow, accent headline, sub, curve divider), 01 Recent writing list, 02 "What I'm building now" (leads with Route Optimizer + now-strip), 03 Selected work as condensed 3-up cards reusing the /work card + link/status systems with "all work →" linking to /work, then Get in touch + Newsletter and the reeds footer. Reuse existing components; no fireflies/sun/clouds yet. Stop for review.
 
 **Done when**
-- [ ] All five sections match the prototype; selected-work cards reuse the shared system.
-- [ ] Responsive; both themes correct.
+- [x] All five sections match the prototype; selected-work cards reuse the shared system.
+- [x] Responsive; both themes correct.
 
 ---
 
@@ -202,4 +202,8 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - Scroll state (progress bar + TOC %/active) via shared `useSyncExternalStore` hook (`use-scroll-progress.ts`) — same eslint constraint as Phase 1.
 - Added `design-reference/**` to eslint `globalIgnores` — prototypes were flooding `npm run lint` with 154 pre-existing errors; app code lints clean.
 - **Local-dev gotcha:** Turbopack's persistent dev cache served stale `globals.css` (missing the whole Phase 3 block) even after recompile — devtools badge showed "(stale)". Fix: stop dev, `rm -rf .next`, restart. Prod builds unaffected.
+- **Phase 4 done (2026-06-13).** Home is `app/page.tsx` (Server Component) + a Phase-4 block ported into `globals.css`. Reused `getAllPosts`/`toPostMeta` (5 latest posts), `ARCHIVE` + `Status`/`CtaLink`/`projectLinks` for the 3-up selected-work cards, and `NewsletterCard`/`CurveDivider`. Build + lint green; `/` prerenders static.
+- **Deviation (Kyler's call):** the hero ends in the **`CurveDivider`** over the tinted gradient band (same treatment as interior `.page-band`), **not** the prototype's reeds separator — reeds stay the single footer bookend.
+- Activated the **`.hero-eyebrow .dot` pulse** deferred in Phase 1 (`@keyframes pulse`, opacity) plus the now-strip green `.live` dot; both added to the `prefers-reduced-motion` no-op list per our motion convention.
+- Placeholder flagged: now-strip "reading … **May**" copy carried verbatim from the prototype (reads stale in June) — left as a conscious choice pending real "now" copy.
 - (add entries here as you go)
