@@ -532,12 +532,27 @@
   line-height: 1.6;
   margin-bottom: 20px;
 }
-.nl-card-form { display: flex; gap: 10px; }
+.nl-card-form { display: flex; gap: 10px; min-width: 0; }
+/* Safety net: a control can never exceed the card on any device. No visual
+   change ≥360px since the controls already fit there. */
+.nl-input,
+.nl-card-form .nl-btn { box-sizing: border-box; max-width: 100%; }
 @media (max-width: 720px) {
   .nl-card { grid-template-columns: 1fr; }
   .nl-card-icon { display: none; }
   .nl-card-form { flex-direction: column; }
   .nl-card-form .nl-btn { width: 100%; }
+}
+/* Very small phones: reclaim horizontal room (the 32px side padding is the
+   biggest space hog) and trim the controls a touch so they stop overflowing. */
+@media (max-width: 360px) {
+  .nl-card { padding: 26px 20px; }
+  .nl-input,
+  .nl-card-form .nl-btn {
+    padding-left: 14px;
+    padding-right: 14px;
+    font-size: 14px;
+  }
 }
 
 /* ============================================
