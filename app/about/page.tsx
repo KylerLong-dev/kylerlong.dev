@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeader } from "../components/page-header";
+import { MarginField } from "../components/atmosphere/margin-field";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -212,12 +213,14 @@ export default function AboutPage() {
         title="Hey — I’m Kyler."
         sub="Developer, physical therapist, and lifelong Floridian. Here’s the longer story, in pieces."
       />
-      <main
-        className="journal-shell"
-        style={{ paddingTop: 56, paddingBottom: 24 }}
-      >
-        <div className="about-bento layout-a">
-          <IntroTile />
+      <div className="atmo-wrap">
+        <MarginField maxWidth={1080} />
+        <main
+          className="journal-shell atmo-content"
+          style={{ paddingTop: 56, paddingBottom: 24 }}
+        >
+          <div className="about-bento layout-a">
+            <IntroTile />
           <PhotoTile />
           <ThroughTile />
           <MapTile />
@@ -226,7 +229,8 @@ export default function AboutPage() {
           <OffTile />
           <ContactTile />
         </div>
-      </main>
+        </main>
+      </div>
     </>
   );
 }

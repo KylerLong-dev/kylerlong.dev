@@ -453,6 +453,12 @@
 [data-theme="light"] .separator.reeds.footer-top {
   color: var(--light-band-top, #E0F2FE);
 }
+/* Home hero ends in the reeds horizon (Kyler's call — overrides SPEC's curve
+   for the hero, bookending the footer reeds; interior/post bands keep the
+   curve). Reeds are page-bg-colored shapes rising into the tinted band; light
+   mode uses white (the page) so they read against the blue sky. */
+.separator.hero-bottom { bottom: -1px; color: var(--bg); }
+[data-theme="light"] .separator.reeds.hero-bottom { color: #FFFFFF; }
 
 /* ---- Newsletter card ---- */
 .nl-input {
@@ -2002,6 +2008,8 @@
   padding: 120px 0 80px;
   position: relative;
 }
+/* Reeds horizon needs more room below the lede than the curve does. */
+.hero-band.has-reeds .hero { padding-bottom: 170px; }
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -2274,3 +2282,169 @@
   transition: border-color 0.15s;
 }
 .home-contact-email:hover { border-bottom-color: var(--accent); }
+
+/* ============================================
+   PHASE 5 — Atmosphere (sky layers)
+   Behind band content (content sits at z-index 3). Each layer self-gates by
+   theme via [data-theme]; the wrong-theme set is simply not painted.
+   ============================================ */
+
+/* ---- Starfield (dark) ---- */
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+[data-theme="light"] .stars { display: none; }
+.star {
+  position: absolute;
+  background: #E2E8F0;
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(226, 232, 240, 0.6);
+  animation: twinkle var(--dur, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+.star.glow {
+  background: var(--accent);
+  box-shadow:
+    0 0 4px var(--accent),
+    0 0 10px rgba(56, 189, 248, 0.6),
+    0 0 18px rgba(56, 189, 248, 0.3);
+}
+@keyframes twinkle {
+  0%, 100% { opacity: var(--base, 0.7); transform: scale(1); }
+  50%      { opacity: 0.15; transform: scale(0.5); }
+}
+
+/* ---- Shooting star (dark) ---- */
+.shooting-star {
+  position: absolute;
+  width: 110px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent 0%, rgba(226, 232, 240, 0.4) 55%, #ffffff 100%);
+  transform-origin: 100% 50%;
+  opacity: 0;
+  animation: shoot var(--dur, 1.8s) linear forwards;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.55));
+}
+[data-theme="light"] .shooting-star { display: none; }
+@keyframes shoot {
+  0%   { opacity: 0; transform: rotate(var(--angle, 30deg)) translateX(0) scaleX(0.4); }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--angle, 30deg)) translateX(120vw) scaleX(1); }
+}
+
+/* ---- Clouds (light) — dissolve into the sun's top-right corner ---- */
+.clouds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+  -webkit-mask-image: radial-gradient(circle 360px at 100% 0%, transparent 0 30%, rgba(0,0,0,0.55) 52%, #000 78%);
+          mask-image: radial-gradient(circle 360px at 100% 0%, transparent 0 30%, rgba(0,0,0,0.55) 52%, #000 78%);
+}
+[data-theme="dark"] .clouds { display: none; }
+.cloud {
+  position: absolute;
+  opacity: 0.85;
+  animation: drift linear infinite;
+  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.04));
+}
+.cloud svg { width: 100%; height: 100%; display: block; }
+.cloud-1 {
+  width: 160px; height: 72px;
+  top: 8%;
+  animation-duration: 180s;
+  animation-delay: -40s;
+}
+.cloud-2 {
+  width: 110px; height: 54px;
+  top: 22%;
+  opacity: 0.7;
+  animation-duration: 140s;
+  animation-delay: -90s;
+}
+.cloud-3 {
+  width: 80px; height: 42px;
+  top: 14%;
+  opacity: 0.55;
+  animation-duration: 220s;
+  animation-delay: -15s;
+}
+@keyframes drift {
+  from { transform: translateX(-200px); }
+  to   { transform: translateX(115vw); }
+}
+
+/* ---- Sun rays (light, home hero only) ---- */
+.sun-rays {
+  position: absolute;
+  top: 0; right: 0;
+  width: min(560px, 60%);
+  height: min(360px, 80%);
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+.sun-core {
+  position: absolute;
+  top: -25px; right: -25px;
+  width: 170px; height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255,248,224,0.98) 0%,
+    rgba(255,226,150,0.9) 26%,
+    rgba(251,191,36,0.42) 48%,
+    rgba(251,191,36,0.13) 66%,
+    rgba(251,191,36,0) 78%);
+}
+.sun-dash-field {
+  position: absolute;
+  top: 60px; right: 60px;
+  width: 0; height: 0;
+}
+.sun-dash {
+  position: absolute;
+  top: 0; left: 0;
+  border-radius: 999px;
+  transform-origin: center center;
+  background: rgb(250, 182, 74);
+  will-change: transform, opacity;
+}
+/* Scale the flourish down on smaller desktops, then hide once there's no room. */
+@media (max-width: 1196px) {
+  .sun-rays { transform: scale(0.82); transform-origin: top right; }
+}
+@media (max-width: 1000px) {
+  .sun-rays { transform: scale(0.66); transform-origin: top right; }
+}
+@media (max-width: 768px) {
+  .sun-rays { display: none; }
+}
+[data-theme="dark"] .sun-rays { display: none; }
+
+/* ---- Decorative sky no-ops: nothing renders under reduced-motion or on
+   touch / coarse pointers (Phase 5 done-criterion). ---- */
+@media (prefers-reduced-motion: reduce) {
+  .stars,
+  .shooting-star,
+  .clouds,
+  .sun-rays { display: none; }
+}
+@media (pointer: coarse) {
+  .stars,
+  .shooting-star,
+  .clouds,
+  .sun-rays { display: none; }
+}
+
+/* ---- Margin fireflies: a relative full-width wrapper holds the gutter field
+   (absolute, z-index 0) behind the centered content (z-index 1). ---- */
+.atmo-wrap { position: relative; }
+.atmo-content { position: relative; z-index: 1; }

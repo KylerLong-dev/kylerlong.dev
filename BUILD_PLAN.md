@@ -130,7 +130,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 
 ---
 
-## [ ] Phase 5 — Atmosphere & interaction
+## [x] Phase 5 — Atmosphere & interaction
 
 **Goal:** The signature decorative layer — themed, performant, accessible, behind content.
 
@@ -148,9 +148,9 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 > Phase 5 only — atmosphere. Port as 'use client' components matching design-reference/atmosphere.jsx + interactive-field.jsx: Stars/ShootingStar and InteractiveField constellation (dark headers, moteCount 0), MarginFireflies (dark, gutters only — density-driven count clamped 2–5, even vertical distribution, 96px min-gutter gate, wall reflection, inner+top+bottom edge-fade mask with composite intersect), SunRays (light, hero top-right, dashes rotate toward cursor, fade into glow, hidden <768px and in dark), and Clouds (light, dissolve into the sun corner via radial mask). Mount per page at the right maxWidth (home 920, work/about/journal 1080, contact 700, post 1180); journal wraps list + newsletter. All decorative layers aria-hidden, pointer-events none, behind content, and no-op under reduced-motion/touch and in the wrong theme. Stop for review.
 
 **Done when**
-- [ ] Dark: constellation in headers + fireflies in gutters; no glowing-line artifact at any width.
-- [ ] Light: sun rays (hover-reactive, hidden <768px) + clouds dissolving into the sun.
-- [ ] Nothing renders on mobile/touch/reduced-motion or in the opposite theme; no perf jank.
+- [x] Dark: constellation in headers + fireflies in gutters; no glowing-line artifact at any width.
+- [x] Light: sun rays (hover-reactive, hidden <768px) + clouds dissolving into the sun.
+- [x] Nothing renders on mobile/touch/reduced-motion or in the opposite theme; no perf jank.
 
 ---
 
@@ -203,7 +203,14 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - Added `design-reference/**` to eslint `globalIgnores` — prototypes were flooding `npm run lint` with 154 pre-existing errors; app code lints clean.
 - **Local-dev gotcha:** Turbopack's persistent dev cache served stale `globals.css` (missing the whole Phase 3 block) even after recompile — devtools badge showed "(stale)". Fix: stop dev, `rm -rf .next`, restart. Prod builds unaffected.
 - **Phase 4 done (2026-06-13).** Home is `app/page.tsx` (Server Component) + a Phase-4 block ported into `globals.css`. Reused `getAllPosts`/`toPostMeta` (5 latest posts), `ARCHIVE` + `Status`/`CtaLink`/`projectLinks` for the 3-up selected-work cards, and `NewsletterCard`/`CurveDivider`. Build + lint green; `/` prerenders static.
-- **Deviation (Kyler's call):** the hero ends in the **`CurveDivider`** over the tinted gradient band (same treatment as interior `.page-band`), **not** the prototype's reeds separator — reeds stay the single footer bookend.
+- **Deviation (Kyler's call) — REVERSED in Phase 5:** Phase 4 shipped the hero with the `CurveDivider`; in Phase 5 Kyler switched the home hero to the **reeds horizon** (both themes) to bookend the footer reeds. Interior/post bands keep the curve. See the Phase 5 notes.
 - Activated the **`.hero-eyebrow .dot` pulse** deferred in Phase 1 (`@keyframes pulse`, opacity) plus the now-strip green `.live` dot; both added to the `prefers-reduced-motion` no-op list per our motion convention.
 - Placeholder flagged: now-strip "reading … **May**" copy carried verbatim from the prototype (reads stale in June) — left as a conscious choice pending real "now" copy.
+- **Phase 5 done (2026-06-13).** Atmosphere in `app/components/atmosphere/`: `stars`/`clouds` (server — deterministic seeded / static SVG), `shooting-star`/`sun-rays`/`interactive-field` (client), `sky` (band wrapper), `margin-field` (gutter fireflies), `use-atmosphere` (gate). Built + reviewed in 2 segments (sky layers, then canvas fields).
+- **Theme gating via CSS + runtime `data-theme`** (render both sets, hide the wrong one) — no SSR theme guess, no FOUC. The canvas field reads `data-theme` live + MutationObserver to re-skin on toggle.
+- **Mounting:** `<Sky>` in every band (PageHeader → work/about/contact/journal, home hero with `sun`, post header), field mounted `moteCount={0}` so **bands carry only the constellation, never fireflies**. `<MarginField>` wraps each page's main content in a `.atmo-wrap`/`.atmo-content` relative container — home 920, work/about/journal 1080, contact 700, post 1180; journal wraps list **and** newsletter.
+- **Tightened the "nothing on touch/reduced-motion" criterion beyond the prototype:** sky layers hidden via `@media (pointer:coarse)` + `(prefers-reduced-motion: reduce)`; canvas fields gated behind `useAtmosphere()` (`useSyncExternalStore`, false on SSR → mount post-hydration). Added reduced-motion no-ops for `twinkle`/`shoot`/`drift` (prototype only gated in JS).
+- **Hydration safety:** SunRays + Stars geometry is seeded/deterministic, and SunRays' initial inline-style floats use `toFixed(2)` — SSR and client emit identical strings.
+- **Reeds hero (Kyler's call, overrides SPEC §197 which specced a curve):** home hero ends in the reeds horizon both themes (`.separator.hero-bottom`; dark = `--bg`, light = `#FFFFFF`), `.hero-band.has-reeds .hero` gets 170px bottom clearance. Home star field tuned: `spread` 90% (reach the divider on every band) + `count` 75 (denser over the taller hero).
+- **Turbopack stale-CSS dev cache** bit us repeatedly (e.g. the `.atmo-wrap` rule not going live → the absolute `MarginField` escaped to the viewport and fireflies landed over the hero). Fix is always `rm -rf .next` + restart `npm run dev`; production builds are unaffected.
 - (add entries here as you go)

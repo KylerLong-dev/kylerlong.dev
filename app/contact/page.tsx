@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeader } from "../components/page-header";
+import { MarginField } from "../components/atmosphere/margin-field";
 import { NewsletterCard } from "../components/newsletter-card";
 
 export const metadata: Metadata = { title: "Contact" };
@@ -12,10 +13,12 @@ export default function ContactPage() {
         title="Say hello."
         sub="Got a question, an idea, or just want to talk shop? My inbox is open."
       />
-      <main
-        className="journal-shell"
-        style={{ paddingTop: 56, paddingBottom: 48 }}
-      >
+      <div className="atmo-wrap">
+        <MarginField maxWidth={700} />
+        <main
+          className="journal-shell atmo-content"
+          style={{ paddingTop: 56, paddingBottom: 48 }}
+        >
         <div className="ledger-wrap">
           <div className="ledger-card">
             <div className="ledger-head">
@@ -66,7 +69,8 @@ export default function ContactPage() {
             <NewsletterCard />
           </div>
         </div>
-      </main>
+        </main>
+      </div>
     </>
   );
 }

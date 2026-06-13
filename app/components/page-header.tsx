@@ -1,7 +1,8 @@
 import { CurveDivider } from "./curve-divider";
+import { Sky } from "./atmosphere/sky";
 
 // Interior page header band (mono eyebrow + dot, title, sub) ending in the
-// curved divider. Atmosphere layers (stars/clouds) are added in Phase 5.
+// curved divider. The atmospheric sky sits behind the content.
 export function PageHeader({
   eyebrow,
   title,
@@ -13,6 +14,7 @@ export function PageHeader({
 }) {
   return (
     <header className="j-header page-band">
+      <Sky />
       <div className="journal-shell">
         <div className="j-header-inner">
           <div className="j-eyebrow">

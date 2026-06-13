@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { CurveDivider } from "./components/curve-divider";
+import { Separator } from "./components/separator";
+import { Sky } from "./components/atmosphere/sky";
+import { MarginField } from "./components/atmosphere/margin-field";
 import { NewsletterCard } from "./components/newsletter-card";
 import { Status } from "./components/status";
 import { CtaLink } from "./components/cta-link";
@@ -52,7 +54,8 @@ export default function Home() {
 
   return (
     <>
-      <section className="hero-band">
+      <section className="hero-band has-reeds">
+        <Sky sun starCount={75} />
         <div className="home-shell">
           <section className="hero">
             <div className="hero-eyebrow">
@@ -71,10 +74,12 @@ export default function Home() {
             </p>
           </section>
         </div>
-        <CurveDivider />
+        <Separator variant="reeds" position="hero-bottom" />
       </section>
 
-      <main className="home-shell">
+      <div className="atmo-wrap">
+        <MarginField maxWidth={920} />
+        <main className="home-shell atmo-content">
         {/* 01 — Recent writing */}
         <section className="section" id="writing">
           <div className="section-head">
@@ -201,7 +206,8 @@ export default function Home() {
           </div>
           <NewsletterCard />
         </section>
-      </main>
+        </main>
+      </div>
     </>
   );
 }

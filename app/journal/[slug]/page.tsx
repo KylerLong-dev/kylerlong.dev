@@ -7,6 +7,8 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import { CurveDivider } from "../../components/curve-divider";
+import { Sky } from "../../components/atmosphere/sky";
+import { MarginField } from "../../components/atmosphere/margin-field";
 import { NewsletterCard } from "../../components/newsletter-card";
 import { ProgressBar } from "../../components/progress-bar";
 import { Toc } from "../../components/toc";
@@ -68,7 +70,7 @@ export default async function PostPage({
       <ProgressBar />
 
       <header className="page-band post-band">
-        {/* Atmosphere layers (Stars/Clouds) arrive in Phase 5. */}
+        <Sky />
         <div className="post-band-grid">
           <div className="post-band-col">
             <h1 className="post-title">{post.title}</h1>
@@ -86,6 +88,9 @@ export default async function PostPage({
         <CurveDivider />
       </header>
 
+      <div className="atmo-wrap">
+        <MarginField maxWidth={1180} />
+        <div className="atmo-content">
       <div className="post-shell">
         <main className="post-main">
           <div className="post-topbar">
@@ -131,6 +136,8 @@ export default async function PostPage({
           <div className="post-rail-right" aria-hidden="true"></div>
         </div>
       </section>
+        </div>
+      </div>
     </>
   );
 }

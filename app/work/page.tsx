@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "../components/page-header";
 import { Status } from "../components/status";
 import { CtaLink } from "../components/cta-link";
+import { MarginField } from "../components/atmosphere/margin-field";
 import { FEATURED, ARCHIVE, projectLinks, type Project } from "../lib/projects";
 
 export const metadata: Metadata = { title: "Work" };
@@ -94,11 +95,13 @@ export default function WorkPage() {
         title="Software that started in a patient’s living room"
         sub="Tools I’ve built for the messy realities of home-health care — and what each one taught me on the way."
       />
-      <main
-        className="journal-shell"
-        style={{ paddingTop: 56, paddingBottom: 16 }}
-      >
-        <div className="work-lead">
+      <div className="atmo-wrap">
+        <MarginField maxWidth={1080} />
+        <main
+          className="journal-shell atmo-content"
+          style={{ paddingTop: 56, paddingBottom: 16 }}
+        >
+          <div className="work-lead">
           <p>
             Every project here traces back to a problem I watched slow down good
             care. The early ones were rough experiments held together with
@@ -128,7 +131,8 @@ export default function WorkPage() {
             ))}
           </div>
         </section>
-      </main>
+        </main>
+      </div>
     </>
   );
 }
