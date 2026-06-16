@@ -154,7 +154,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 
 ---
 
-## [ ] Phase 6 — Polish & ship
+## [~] Phase 6 — Polish & ship
 
 **Goal:** Production-ready — responsive, discoverable, fast, deployed.
 
@@ -170,9 +170,9 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 > Phase 6 — polish & ship. Do a full responsive sweep (mobile nav, sun hidden <768px, fireflies gated, ≥44px targets, no overflow). Add per-route metadata + OG/Twitter images, app/sitemap.ts, an RSS feed for the journal, and favicons. Accessibility pass (focus states, skip link, contrast, aria on decorative layers). Run Lighthouse against the Vercel preview and fix regressions. List every remaining placeholder from CLAUDE.md so I can fill them. Then prep the production Vercel deploy.
 
 **Done when**
-- [ ] Clean on real mobile + desktop; Lighthouse a11y/perf solid.
-- [ ] Metadata/OG/sitemap/RSS present; placeholders filled or tracked.
-- [ ] Production deploy live on Vercel.
+- [~] Clean on real mobile + desktop; Lighthouse a11y/perf solid. *(Responsive/overflow + a11y done & reviewed; Lighthouse pass is Kyler's step on the preview.)*
+- [x] Metadata/OG/sitemap/RSS present; placeholders filled or tracked.
+- [ ] Production deploy live on Vercel. *(Kyler's step.)*
 
 ---
 
@@ -213,4 +213,12 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - **Hydration safety:** SunRays + Stars geometry is seeded/deterministic, and SunRays' initial inline-style floats use `toFixed(2)` — SSR and client emit identical strings.
 - **Reeds hero (Kyler's call, overrides SPEC §197 which specced a curve):** home hero ends in the reeds horizon both themes (`.separator.hero-bottom`; dark = `--bg`, light = `#FFFFFF`), `.hero-band.has-reeds .hero` gets 170px bottom clearance. Home star field tuned: `spread` 90% (reach the divider on every band) + `count` 75 (denser over the taller hero).
 - **Turbopack stale-CSS dev cache** bit us repeatedly (e.g. the `.atmo-wrap` rule not going live → the absolute `MarginField` escaped to the viewport and fireflies landed over the hero). Fix is always `rm -rf .next` + restart `npm run dev`; production builds are unaffected.
+- **Phase 6 in progress (2026-06-16)** — built in 5 reviewable segments; production deploy + Lighthouse remain Kyler's steps on Vercel.
+- **A11y:** skip-to-content link → focusable `#main-content` wrapper (each page keeps its own single `<main>`, so no duplicate landmark); global `:focus-visible` ring scoped via `:where()` (0 specificity so component styles like `.nl-input` still win); collapsed mobile menu now drops out of the tab order via a one-way-delayed `visibility` transition. Confirmed all decorative layers already `aria-hidden`.
+- **Metadata:** `metadataBase = https://kylerlong.dev`; shared `pageMetadata()` helper in `app/lib/site.ts` (title/description/canonical + OG/Twitter) for the interior pages; posts get `og:type=article` (+ published time/author/tags); `app/sitemap.ts` + `app/robots.ts`.
+- **OG images:** dynamic `next/og` via shared `app/lib/og.tsx` `ogImage()` — loads Geist TTFs from the installed `geist` package; root card + per-post card (title · category · date), `twitter-image` files re-export the OG ones; generated `app/icon.tsx` + `app/apple-icon.tsx` (lowercase `k.` mark, kept the default `favicon.ico` as fallback). All statically generated at build (rasterized + eyeballed both cards). *(Favicon art is a placeholder Kyler will revisit later.)*
+- **RSS:** `app/feed.xml/route.ts` (`export const dynamic = "force-static"`) → RSS 2.0 from `getAllPosts`; footer `rss` link wired; `<link rel="alternate" application/rss+xml>` autodiscovery on every route via `alternates.types`.
+- **Orlando map (Kyler's call — reversed from the planned SVG):** NOT a hand-drawn SVG. Real **OpenStreetMap `export/embed.html` iframe** (no API key, no new dep), zoomed-out `bbox=-92,22,-76,33` with a marker on Orlando (city-level, no exact address); dark mode tints the light tiles via `filter: invert/hue-rotate`; frosted "Orlando, FL" label chip; lat/long line dropped.
+- **Copy:** home now-strip "reading … **May**" → "now" (was the flagged stale placeholder).
+- **Still-open placeholders (tracked, not invented):** blog email (`kyler@kylerlong.dev` to be created), X handle (`#`), About portrait photo, real project case-study/live URLs.
 - (add entries here as you go)

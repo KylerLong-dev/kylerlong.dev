@@ -9,8 +9,14 @@ import {
   getPopularPosts,
   toPostMeta,
 } from "../lib/posts";
+import { pageMetadata } from "../lib/site";
 
-export const metadata: Metadata = { title: "Journal" };
+export const metadata: Metadata = pageMetadata({
+  title: "Journal",
+  description:
+    "Field notes from building things — writing on software, craft, and the long way around, by Kyler Long.",
+  path: "/journal",
+});
 
 export default function JournalPage() {
   const posts = getAllPosts();

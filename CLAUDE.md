@@ -55,4 +55,5 @@ Type: Geist (sans, body 17/1.7, features ss01/cv11), Geist Mono (labels/code), N
 - Don't make whole cards/rows clickable when there are multiple links — only the link text is the target.
 
 ## Placeholders to fill (ask Kyler)
-RSS feed, X handle (currently `#`), confirm email `kyler@kylerlong.dev`, real project/case-study/live URLs, About portrait photo + Orlando map.
+X handle (currently `#`), **blog email** (`kyler@kylerlong.dev` is a placeholder — create the real inbox; used in `mailto:` on /contact + /about), real project/case-study/live URLs, About portrait photo.
+*(Done in Phase 6: RSS feed → `/feed.xml`; Orlando map → real OpenStreetMap embed.)*

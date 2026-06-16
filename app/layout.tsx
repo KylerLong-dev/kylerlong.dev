@@ -5,6 +5,12 @@ import { Newsreader } from "next/font/google";
 import { Providers } from "./providers";
 import { Nav } from "./components/nav";
 import { SiteFooter } from "./components/site-footer";
+import {
+  RSS_ALTERNATE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "./lib/site";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -15,12 +21,26 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Kyler Long",
     template: "%s · Kyler Long",
   },
-  description:
-    "Personal site and journal of Kyler Long — software developer and home-health physical therapist in Orlando, FL.",
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/", types: RSS_ALTERNATE },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: "/",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
@@ -36,8 +56,13 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col">
         <Providers>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
           <Nav />
-          <div className="flex flex-1 flex-col">{children}</div>
+          <div id="main-content" tabIndex={-1} className="flex flex-1 flex-col">
+            {children}
+          </div>
           <SiteFooter />
         </Providers>
       </body>

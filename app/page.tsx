@@ -45,7 +45,7 @@ const NOW = [
   {
     project: "reading",
     what: "Designing Data-Intensive Applications — finally — and Annie Dillard, The Writing Life.",
-    when: "May",
+    when: "now",
   },
 ];
 

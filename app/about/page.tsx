@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { PageHeader } from "../components/page-header";
 import { MarginField } from "../components/atmosphere/margin-field";
+import { pageMetadata } from "../lib/site";
 
-export const metadata: Metadata = { title: "About" };
+export const metadata: Metadata = pageMetadata({
+  title: "About",
+  description:
+    "About Kyler Long — a software developer and home-health physical therapist in Orlando, FL, building from the field and writing about both crafts.",
+  path: "/about",
+});
 
 function IntroTile() {
   return (
@@ -51,25 +57,23 @@ function ThroughTile() {
 }
 
 function MapTile() {
+  // Real map via OpenStreetMap's embed (no API key, no extra deps). Zoomed out
+  // to the Florida region with a marker on Orlando — city-level, not an exact
+  // address. Themed to the site in CSS (dark mode inverts the light tiles).
+  const bbox = "-92.0,22.0,-76.0,33.0";
+  const marker = "28.5383,-81.3792";
+  const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${marker}`;
   return (
     <div className="bento-tile tile-map">
-      <div className="map-canvas" />
-      <svg
-        className="map-roads"
-        viewBox="0 0 200 160"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        preserveAspectRatio="none"
-      >
-        <path d="M-5 40 C 60 55, 90 30, 210 70" stroke="var(--text-3)" />
-        <path d="M30 -5 C 50 60, 110 90, 90 170" stroke="var(--text-3)" />
-        <path d="M120 -5 C 130 50, 140 80, 200 110" stroke="var(--text-3)" />
-      </svg>
-      <span className="map-pin" />
+      <iframe
+        className="map-frame"
+        title="Map showing Orlando, Florida"
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        src={mapSrc}
+      />
       <div className="map-label">
         <div className="city">Orlando, FL</div>
-        <div className="coords">28.54° N · 81.38° W</div>
       </div>
     </div>
   );

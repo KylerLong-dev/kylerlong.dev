@@ -20,6 +20,7 @@ import {
   getAllPosts,
   getPostBySlug,
 } from "../../lib/posts";
+import { RSS_ALTERNATE } from "../../lib/site";
 
 const prettyCodeOptions: Options = {
   theme: { dark: codeThemeDark, light: codeThemeLight },
@@ -51,7 +52,27 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return {};
-  return { title: post.title, description: post.excerpt };
+
+  const url = `/journal/${post.slug}`;
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: { canonical: url, types: RSS_ALTERNATE },
+    openGraph: {
+      type: "article",
+      url,
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: post.date,
+      authors: ["Kyler Long"],
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+    },
+  };
 }
 
 export default async function PostPage({

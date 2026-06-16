@@ -1,7 +1,7 @@
 import { Separator } from "./separator";
 
 // Tinted band with upward-pointing reeds, plus the copyright + links row.
-// rss/x are placeholders (#) until a feed/handle exist; github is live.
+// rss → the journal feed; github is live; x is a placeholder (#) until a handle exists.
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
@@ -11,7 +11,7 @@ export function SiteFooter() {
         <div className="footer-inner">
           <span>© {year} Kyler Long · Orlando, FL</span>
           <div style={{ display: "flex", gap: 18 }}>
-            <a href="#">rss</a>
+            <a href="/feed.xml">rss</a>
             <a
               href="https://github.com/KylerLong-dev"
               target="_blank"

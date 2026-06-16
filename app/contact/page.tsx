@@ -2,8 +2,14 @@ import type { Metadata } from "next";
 import { PageHeader } from "../components/page-header";
 import { MarginField } from "../components/atmosphere/margin-field";
 import { NewsletterCard } from "../components/newsletter-card";
+import { pageMetadata } from "../lib/site";
 
-export const metadata: Metadata = { title: "Contact" };
+export const metadata: Metadata = pageMetadata({
+  title: "Contact",
+  description:
+    "Get in touch with Kyler Long — questions, ideas, or just to talk shop. The inbox is open.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

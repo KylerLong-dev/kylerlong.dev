@@ -4,8 +4,14 @@ import { Status } from "../components/status";
 import { CtaLink } from "../components/cta-link";
 import { MarginField } from "../components/atmosphere/margin-field";
 import { FEATURED, ARCHIVE, projectLinks, type Project } from "../lib/projects";
+import { pageMetadata } from "../lib/site";
 
-export const metadata: Metadata = { title: "Work" };
+export const metadata: Metadata = pageMetadata({
+  title: "Work",
+  description:
+    "Selected work by Kyler Long — software built from the field, where home-health physical therapy meets shipping code.",
+  path: "/work",
+});
 
 // Featured project — large asymmetric card. Not a link while building; 0 links
 // shows "In active development" instead of CTAs.
