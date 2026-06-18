@@ -2057,10 +2057,11 @@
 .hero-band.has-reeds .hero { padding-bottom: 170px; }
 .hero-eyebrow {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   font-family: var(--font-mono);
   font-size: 12px;
+  line-height: 1.5;
   color: var(--text-2);
   margin-bottom: 28px;
   letter-spacing: 0.02em;
@@ -2068,6 +2069,8 @@
 .hero-eyebrow .dot {
   width: 6px;
   height: 6px;
+  margin-top: 6px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 8px var(--accent);
