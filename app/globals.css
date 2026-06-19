@@ -908,6 +908,9 @@
   transition: border-color 0.18s, transform 0.18s;
 }
 .bento-tile:hover { transform: translateY(-3px); border-color: var(--accent-line); }
+@media (prefers-reduced-motion: reduce) {
+  .bento-tile:hover { transform: none; }
+}
 .bento-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -2150,32 +2153,20 @@
   text-decoration: none;
   color: inherit;
   align-items: baseline;
-  transition: padding 0.2s ease;
+  transition: transform 0.2s ease;
   position: relative;
 }
 .writing-item:last-child { border-bottom: none; }
-.writing-item:hover { padding-left: 12px; }
+.writing-item:hover { transform: translateX(8px); }
 .writing-item:hover .writing-title { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  .writing-item:hover { transform: none; }
+}
 .writing-date {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--text-3);
-  position: relative;
 }
-.writing-date::before {
-  content: "";
-  position: absolute;
-  left: -16px;
-  top: 50%;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: 0;
-  transform: translateY(-50%);
-  transition: opacity 0.2s;
-}
-.writing-item:hover .writing-date::before { opacity: 1; }
 .writing-body { min-width: 0; }
 .writing-title {
   font-size: 17px;
@@ -2288,6 +2279,11 @@
   gap: 12px;
   position: relative;
   min-height: 176px;
+  transition: border-color 0.18s, transform 0.18s;
+}
+.work-card:hover { transform: translateY(-3px); border-color: var(--accent-line); }
+@media (prefers-reduced-motion: reduce) {
+  .work-card:hover { transform: none; }
 }
 .work-card .st { font-size: 11px; }
 .work-title {
