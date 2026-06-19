@@ -1,9 +1,17 @@
+import fs from "node:fs";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-// Favicon: dark tile with the wordmark's "k" + accent dot.
+// Geist ships TTFs in the installed package; read once at module load. Satori
+// ignores fontWeight without real font data, so load Black for a heavy mark.
+const geistBlack = fs.readFileSync(
+  path.join(process.cwd(), "node_modules/geist/dist/fonts/geist-sans/Geist-Black.ttf"),
+);
+
+// Favicon: dark tile with the centered "K" mark in accent blue.
 export default function Icon() {
   return new ImageResponse(
     (
@@ -12,9 +20,8 @@ export default function Icon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "flex-end",
+          alignItems: "center",
           justifyContent: "center",
-          paddingBottom: 5,
           backgroundColor: "#0B1628",
           borderRadius: 7,
         }}
@@ -22,18 +29,20 @@ export default function Icon() {
         <div
           style={{
             display: "flex",
-            alignItems: "flex-end",
-            fontSize: 23,
-            fontWeight: 700,
-            color: "#E2E8F0",
+            fontFamily: "Geist",
+            fontSize: 21,
+            fontWeight: 900,
+            color: "#38BDF8",
             lineHeight: 1,
           }}
         >
-          <span>k</span>
-          <span style={{ color: "#38BDF8" }}>.</span>
+          K
         </div>
       </div>
     ),
-    { ...size },
+    {
+      ...size,
+      fonts: [{ name: "Geist", data: geistBlack, weight: 900, style: "normal" }],
+    },
   );
 }
