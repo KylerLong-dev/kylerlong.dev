@@ -188,8 +188,8 @@ export default function Home() {
           </div>
           <p className="home-contact-lede">
             The best way to reach me is{" "}
-            <a className="home-contact-email" href="mailto:kyler@kylerlong.dev">
-              kyler@kylerlong.dev
+            <a className="home-contact-email" href="mailto:hello@kylerlong.dev">
+              hello@kylerlong.dev
             </a>{" "}
             — I read everything and reply to most. I&rsquo;m slow but I&rsquo;m
             honest.

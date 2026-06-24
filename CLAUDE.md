@@ -55,5 +55,5 @@ Type: Geist (sans, body 17/1.7, features ss01/cv11), Geist Mono (labels/code), N
 - Don't make whole cards/rows clickable when there are multiple links — only the link text is the target.
 
 ## Placeholders to fill (ask Kyler)
-X handle (currently `#`), **blog email** (`kyler@kylerlong.dev` is a placeholder — create the real inbox; used in `mailto:` on /contact + /about), real project/case-study/live URLs, About portrait photo.
+X handle (currently `#`), **blog email** — decided: `hello@kylerlong.dev` for general contact (the `mailto:` on /contact + /about) and `journal@kylerlong.dev` as the newsletter "from" address. Inboxes not yet created (plan: free Cloudflare Email Routing → forward to Gmail). real project/case-study/live URLs, About portrait photo.
 *(Done in Phase 6: RSS feed → `/feed.xml`; Orlando map → real OpenStreetMap embed.)*

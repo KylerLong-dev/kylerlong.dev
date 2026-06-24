@@ -220,5 +220,5 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done & reviewed.
 - **RSS:** `app/feed.xml/route.ts` (`export const dynamic = "force-static"`) → RSS 2.0 from `getAllPosts`; footer `rss` link wired; `<link rel="alternate" application/rss+xml>` autodiscovery on every route via `alternates.types`.
 - **Orlando map (Kyler's call — reversed from the planned SVG):** NOT a hand-drawn SVG. Real **OpenStreetMap `export/embed.html` iframe** (no API key, no new dep), zoomed-out `bbox=-92,22,-76,33` with a marker on Orlando (city-level, no exact address); dark mode tints the light tiles via `filter: invert/hue-rotate`; frosted "Orlando, FL" label chip; lat/long line dropped.
 - **Copy:** home now-strip "reading … **May**" → "now" (was the flagged stale placeholder).
-- **Still-open placeholders (tracked, not invented):** blog email (`kyler@kylerlong.dev` to be created), X handle (`#`), About portrait photo, real project case-study/live URLs.
+- **Still-open placeholders (tracked, not invented):** blog email — addresses decided & wired into `mailto:` links (`hello@kylerlong.dev` general contact, `journal@kylerlong.dev` newsletter from-address); inboxes still to be created (plan: free Cloudflare Email Routing → forward to Gmail). X handle (`#`), About portrait photo, real project case-study/live URLs.
 - (add entries here as you go)

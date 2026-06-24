@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Newsreader } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
 import { Nav } from "./components/nav";
 import { SiteFooter } from "./components/site-footer";
@@ -65,6 +67,8 @@ export default function RootLayout({
           </div>
           <SiteFooter />
         </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

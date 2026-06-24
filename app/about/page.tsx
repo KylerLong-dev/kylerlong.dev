@@ -184,8 +184,8 @@ function ContactTile() {
   return (
     <div className="bento-tile tile-contact">
       <div className="tile-heading">Get in touch</div>
-      <a className="contact-email" href="mailto:kyler@kylerlong.dev">
-        kyler@kylerlong.dev
+      <a className="contact-email" href="mailto:hello@kylerlong.dev">
+        hello@kylerlong.dev
       </a>
       <div className="contact-links">
         <a

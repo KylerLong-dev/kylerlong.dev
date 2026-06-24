@@ -35,7 +35,7 @@ export default function ContactPage() {
               <div className="ledger-row">
                 <span className="k">email</span>
                 <span className="v">
-                  <a href="mailto:kyler@kylerlong.dev">kyler@kylerlong.dev</a>
+                  <a href="mailto:hello@kylerlong.dev">hello@kylerlong.dev</a>
                 </span>
               </div>
               <div className="ledger-row">
