@@ -12,6 +12,7 @@ Personal site + journal for Kyler Long (software developer & home-health physica
 - MDX for blog posts via **`next-mdx-remote/rsc` + `gray-matter`** (frontmatter + journal index). NOT `@next/mdx` — Turbopack is the default bundler in Next 16 and can't take function plugin options; next-mdx-remote compiles in Node so plugins pass as real functions. Plugins: `remark-gfm`, `rehype-slug`, `rehype-autolink-headings`, `rehype-pretty-code`/Shiki.
 - Fonts: `geist` (sans + mono) via the geist package; `Newsreader` via `next/font/google`
 - Deploy: Vercel
+- Env: `BUTTONDOWN_API_KEY` (newsletter subscribe action, server-only) — set in `.env.local` locally + Vercel project env; never commit.
 
 ## Workflow
 Build in phases per `BUILD_PLAN.md` (also SPEC.md §9): scaffold → shell → static pages → journal+MDX → home → atmosphere → polish/ship. One phase at a time; verify each against `/design-reference/` and stop for review before the next. Check the box + log decisions only after I confirm on the Vercel preview.

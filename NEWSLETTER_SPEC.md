@@ -34,14 +34,28 @@ to the browser and without abandoning the custom `nl-card` design.
   - `journal@kylerlong.dev` → newsletter "from" address (set in Buttondown, not in code).
 
 ## Prerequisites — Kyler's manual steps (Claude can't do these)
-1. **Receiving inbox.** Set up free **Cloudflare Email Routing** for `kylerlong.dev`
-   → forward `hello@` and `journal@` to the personal Gmail. (Confirm where the domain's
-   DNS is managed — Cloudflare / Vercel / registrar — that's where records go.)
-2. **Buttondown account.** Sign up (login email can be the existing Gmail).
-3. **Domain authentication in Buttondown.** Add the DKIM/SPF DNS records it provides so it
-   can send as `journal@kylerlong.dev`. Set that as the from-address.
+> **DNS lives on Vercel.** `kylerlong.dev` uses Vercel's nameservers
+> (`ns1/ns2.vercel-dns.com`), so every record below is added in
+> **Vercel → Domains → `kylerlong.dev` → DNS Records** — no nameserver change, no
+> migration. (This is why we're *not* using Cloudflare Email Routing: it would require
+> moving nameservers off Vercel.)
+
+1. **Receiving inbox (forwarding).** Use **ImprovMX** (free). Sign up at improvmx.com, add
+   `kylerlong.dev`, then add the MX + SPF records it shows you in Vercel DNS — expect
+   `mx1.improvmx.com` (pri 10), `mx2.improvmx.com` (pri 20), and TXT
+   `v=spf1 include:spf.improvmx.com ~all`. In ImprovMX, create aliases `hello@` and
+   `journal@` (or a catch-all `*`) → forward to the personal Gmail. Always copy the exact
+   values ImprovMX displays. (Open-source alternative: ForwardEmail.net — same
+   MX/TXT-in-Vercel approach.) - COMPLETE
+2. **Buttondown account.** Sign up (login email can be the existing Gmail). COMPLETE
+3. **Domain authentication in Buttondown (sending).** Add the DKIM/SPF/DMARC records
+   Buttondown provides — in the same Vercel DNS panel — so it can send as
+   `journal@kylerlong.dev`; set that as the from-address. **Only one SPF (`v=spf1`) TXT
+   record is allowed per domain** — don't add a second one; instead **merge** the ImprovMX
+   and Buttondown includes into one, e.g.
+   `v=spf1 include:spf.improvmx.com include:<buttondown-provided> ~all`.
 4. **API key.** Copy from Buttondown settings → put in `.env.local` as
-   `BUTTONDOWN_API_KEY=...` (never commit) and add the same var in Vercel project settings.
+   `BUTTONDOWN_API_KEY=...` (never commit) and add the same var in Vercel project settings. COMPLETE
 
 ## Implementation tasks (Claude, once the API key exists)
 - [ ] **1. Server action** — `app/actions/subscribe.ts`
@@ -88,11 +102,13 @@ to the browser and without abandoning the custom `nl-card` design.
 - [ ] `prefers-reduced-motion` respected for any new transitions.
 
 ## Open questions / to confirm before building
-- Where is `kylerlong.dev` DNS managed? (affects steps 1 & 3)
+- ~~Where is `kylerlong.dev` DNS managed?~~ **Resolved: Vercel** (`ns1/ns2.vercel-dns.com`)
+  — all email DNS records (forwarding + Buttondown auth) are added in the Vercel dashboard.
 - Tag subscribers (`["journal"]`) or single untagged list? (default: tag `journal`)
 - Any extra fields to collect later (name)? (default: email only)
 
 ## References
 - Buttondown API: https://docs.buttondown.com/api-introduction
-- Cloudflare Email Routing: https://developers.cloudflare.com/email-routing/
+- ImprovMX (email forwarding): https://improvmx.com/ — alt: https://forwardemail.net/
+- Managing DNS records on Vercel: https://vercel.com/docs/projects/domains/managing-dns-records
 - Next.js Server Actions / forms: https://nextjs.org/docs/app/guides/forms

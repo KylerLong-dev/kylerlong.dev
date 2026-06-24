@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
+import { subscribe } from "../actions/subscribe";
 
-// Standalone newsletter card — used on interior pages above the footer and
-// (Phase 4) matching the home page's section-05 card. Submit is a local
-// success state for now; real subscribe wiring is a later concern.
+// Standalone newsletter card — used on interior pages above the footer and the
+// home page's section-05 card. Submits through the `subscribe` Server Action
+// (which proxies Buttondown). React 19 `useActionState` drives pending/error
+// state; the plain <form action> means it still works with JavaScript disabled.
 export function NewsletterCard() {
+  // Controlled so a typed address survives an inline error (the action keeps the
+  // form mounted on error; on success we swap to the done state below).
   const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setDone(true);
-  };
+  const [state, formAction, pending] = useActionState(subscribe, {
+    status: "idle",
+  });
 
   return (
     <div className="nl nl-card">
@@ -38,7 +38,7 @@ export function NewsletterCard() {
           New posts on software, craft, and the occasional detour — straight to
           your inbox. No more than a couple times a month.
         </div>
-        {done ? (
+        {state.status === "success" ? (
           <div className="nl-done">
             <svg
               width="15"
@@ -52,22 +52,55 @@ export function NewsletterCard() {
             >
               <polyline points="20 6 9 17 4 12" />
             </svg>
-            You&rsquo;re on the list — thanks for reading.
+            {state.message}
           </div>
         ) : (
-          <form className="nl-card-form" onSubmit={submit}>
-            <input
-              type="email"
-              className="nl-input"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-label="Email address"
-            />
-            <button type="submit" className="nl-btn">
-              Subscribe
-            </button>
-          </form>
+          <>
+            <form className="nl-card-form" action={formAction}>
+              {/* Honeypot: hidden from users + AT; bots that fill it are dropped
+                  server-side. Inline-styled so it's hidden regardless of CSS. */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "-9999px",
+                  width: 1,
+                  height: 1,
+                  overflow: "hidden",
+                }}
+              >
+                <label>
+                  Leave this field empty
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </label>
+              </div>
+              <input
+                type="email"
+                name="email"
+                className="nl-input"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                aria-label="Email address"
+                autoComplete="email"
+                required
+                disabled={pending}
+              />
+              <button type="submit" className="nl-btn" disabled={pending}>
+                {pending ? "Subscribing…" : "Subscribe"}
+              </button>
+            </form>
+            {state.status === "error" && (
+              <div className="nl-error" role="alert">
+                {state.message}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

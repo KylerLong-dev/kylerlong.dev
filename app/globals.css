@@ -19,6 +19,7 @@
   --accent: #38BDF8;
   --accent-soft: rgba(56, 189, 248, 0.12);
   --accent-line: rgba(56, 189, 248, 0.28);
+  --danger: #F87171; /* red-400 — readable on the dark surface */
   --border: #1E293B;
   --border-soft: #182238;
   --selection: rgba(56, 189, 248, 0.25);
@@ -36,6 +37,7 @@
   --accent: #0284C7; /* darker in light mode for contrast */
   --accent-soft: rgba(56, 189, 248, 0.10);
   --accent-line: rgba(2, 132, 199, 0.3);
+  --danger: #DC2626; /* red-600 — readable on the near-white light surface */
   --border: #E2E8F0;
   --border-soft: #EEF2F7;
   --selection: rgba(56, 189, 248, 0.3);
@@ -560,6 +562,17 @@
   padding: 6px 0;
 }
 .nl-done svg { flex-shrink: 0; }
+/* Pending: dim the controls and signal non-interactivity while the action runs. */
+.nl-btn:disabled,
+.nl-input:disabled { opacity: 0.6; cursor: not-allowed; }
+/* Inline error — sits below the form in the card, in the danger tone. */
+.nl-error {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--danger);
+  line-height: 1.5;
+  margin-top: 10px;
+}
 .nl-card {
   display: grid;
   grid-template-columns: 44px 1fr;
