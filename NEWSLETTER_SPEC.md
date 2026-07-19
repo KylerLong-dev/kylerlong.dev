@@ -1,6 +1,7 @@
 # Newsletter Subscription — Spec & Task List
 
-Status: **planned, not started.** Created 2026-06-22. Pick this up when ready.
+Status: **implemented & committed** (2026-06-24, commit `61c6429`). Created 2026-06-22.
+Remaining: live end-to-end verification on the Vercel preview (see acceptance criteria).
 
 ## Goal
 Turn the journal's newsletter form from a fake (local-only) success state into a real
@@ -48,17 +49,19 @@ to the browser and without abandoning the custom `nl-card` design.
    values ImprovMX displays. (Open-source alternative: ForwardEmail.net — same
    MX/TXT-in-Vercel approach.) - COMPLETE
 2. **Buttondown account.** Sign up (login email can be the existing Gmail). COMPLETE
-3. **Domain authentication in Buttondown (sending).** Add the DKIM/SPF/DMARC records
-   Buttondown provides — in the same Vercel DNS panel — so it can send as
-   `journal@kylerlong.dev`; set that as the from-address. **Only one SPF (`v=spf1`) TXT
-   record is allowed per domain** — don't add a second one; instead **merge** the ImprovMX
-   and Buttondown includes into one, e.g.
-   `v=spf1 include:spf.improvmx.com include:<buttondown-provided> ~all`.
+3. **Domain authentication in Buttondown (sending).** Sending domain set to `kylerlong.dev`
+   with from-address `journal@kylerlong.dev`. Buttondown sends via **Postmark**, so the four
+   records it hands you are: DKIM `TXT` (`<selector>pm._domainkey`), `CNAME pm-bounces →
+   pm.mtasv.net` (Return-Path), `CNAME track → webhook-consumer.buttondown.email`, and
+   `TXT _dmarc`. Added in Vercel DNS; all four verified **Present** in Buttondown.
+   **No SPF change needed** — Postmark aligns SPF via the `pm-bounces` Return-Path subdomain,
+   so the existing ImprovMX `v=spf1 include:spf.improvmx.com ~all` record is left untouched
+   (no merge). Existing ImprovMX MX/forwarding also unaffected. COMPLETE (2026-07-18)
 4. **API key.** Copy from Buttondown settings → put in `.env.local` as
    `BUTTONDOWN_API_KEY=...` (never commit) and add the same var in Vercel project settings. COMPLETE
 
 ## Implementation tasks (Claude, once the API key exists)
-- [ ] **1. Server action** — `app/actions/subscribe.ts`
+- [x] **1. Server action** — `app/actions/subscribe.ts`
   - Reads `BUTTONDOWN_API_KEY` from `process.env` (server-only).
   - Validates email (basic shape) and rejects empty.
   - Honeypot check: if the hidden field is filled, return success silently (don't POST).
@@ -70,7 +73,7 @@ to the browser and without abandoning the custom `nl-card` design.
     - invalid email / other 4xx → user-facing error.
     - network/5xx → generic "something went wrong, try again."
   - No secrets or raw provider errors leaked to the client.
-- [ ] **2. Wire the form** — `app/components/newsletter-card.tsx`
+- [x] **2. Wire the form** — `app/components/newsletter-card.tsx`
   - Switch to `useActionState` against the server action (keep it a client component for
     pending UI; form still works without JS).
   - Add **pending** (disable button / "Subscribing…") and **error** states (the component
@@ -78,10 +81,10 @@ to the browser and without abandoning the custom `nl-card` design.
   - Update success copy → "Check your inbox to confirm your subscription."
   - Add the hidden honeypot input (visually hidden, `aria-hidden`, `tabindex=-1`,
     `autocomplete=off`).
-- [ ] **3. Styles** — `app/globals.css`
+- [x] **3. Styles** — `app/globals.css`
   - Add `nl-error` style (matching the design language of `nl-done`).
   - Style/disable state for the button while pending.
-- [ ] **4. Env docs** — note `BUTTONDOWN_API_KEY` in CLAUDE.md and `.env.example` if we add one.
+- [x] **4. Env docs** — `BUTTONDOWN_API_KEY` documented in CLAUDE.md. (No `.env.example` added.)
 - [ ] **5. (Optional, later) RSS-to-email** — configure Buttondown to draft issues from
   `/feed.xml` so writing an MDX post can become the newsletter. Provider-side config, no code.
 
@@ -104,7 +107,7 @@ to the browser and without abandoning the custom `nl-card` design.
 ## Open questions / to confirm before building
 - ~~Where is `kylerlong.dev` DNS managed?~~ **Resolved: Vercel** (`ns1/ns2.vercel-dns.com`)
   — all email DNS records (forwarding + Buttondown auth) are added in the Vercel dashboard.
-- Tag subscribers (`["journal"]`) or single untagged list? (default: tag `journal`)
+- ~~Tag subscribers (`["journal"]`) or single untagged list?~~ **Resolved: single untagged list** — shipped without a tag.
 - Any extra fields to collect later (name)? (default: email only)
 
 ## References
